@@ -15,4 +15,5 @@ This also uses Tailwind CSS.
 -   Create a file .env
 -   Copy the the database connections (or all of them) from .env.example to .en
 -   Setup the app_key (or user this https://generate-random.org/laravel-key-generator)
+-   And then setup the database and run command php artisan migrate.
 -   After the steps above. Use the command npm run dev and php artisan serve.
