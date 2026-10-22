@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class LogoutController extends Controller
+class LogoutController extends Controller implements HasMiddleware
 {
-    public function __construct()
+    public static function middleware(): array
     {
-        return $this->middleware(['auth']);
+        return ['auth'];
     }
 
     public function logout()
     {
         auth()->logout();
+
         return redirect()->route('login');
     }
 }

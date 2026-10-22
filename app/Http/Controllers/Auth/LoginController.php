@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class LoginController extends Controller
+class LoginController extends Controller implements HasMiddleware
 {
-
-    public function __construct()
+    // for guest user only
+    public static function middleware(): array
     {
-        return $this->middleware(['guest']);
+        return ['guest'];
     }
 
     public function index()
