@@ -4,24 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class StudenController extends Controller
+class StudenController extends Controller implements HasMiddleware
 {
-
-    public function __construct()
+    // only index can be accessed by guest, other functions need auth
+    public static function middleware(): array
     {
-        //only is a method that only functions have middleware other functions can be access by guest
-        return $this->middleware(['auth'])->except('index');
+        return [new Middleware('auth', except: ['index'])];
     }
 
     public function index()
     {
-
         $students = Student::paginate(20);
 
-        //return index page of student
+        // return index page of student
         return view('pages.student.index', ['students' => $students]);
     }
 
@@ -33,19 +31,10 @@ class StudenController extends Controller
 
     public function store(Request $request)
     {
-        //validation
-        $this->validate($request, ['first_name' => 'required|max:255', 'last_name' => 'required|max:255']);
+        // validation
+        $request->validate(['first_name' => 'required|max:255', 'last_name' => 'required|max:255']);
 
-        //custom validation
-        // $validator = Validator::make($request->all(), ['first_name' => 'required|max:255', 'last_name' => 'required|max:255']);
-        // if ($validator->fails()) {
-        //     return redirect()->back()->withInput()->withErrors($validator);
-        //     // $firstNameErr = $validator->errors('first_name');
-        //     // $lastNameErr = $validator->errors('last_name');
-        //     // return view('pages.student.create', ['errors' => $validator->errors()]);
-        // }
-
-        //store or create new student
+        // store or create new student
         Student::create(['first_name' => $request->first_name, 'last_name' => $request->last_name]);
 
         return back()->with('savedMessage', 'New student has been saved.');
@@ -53,31 +42,32 @@ class StudenController extends Controller
 
     public function get(Request $request)
     {
-
-        //get specific student for update
+        // get specific student for update
         $student = Student::find($request->id);
+
         return view('pages.student.update', ['student' => $student]);
     }
 
     public function update(Request $request)
     {
-        //validation
-        $this->validate($request, ['first_name' => 'required|max:255', 'last_name' => 'required|max:255']);
+        // validation
+        $request->validate(['first_name' => 'required|max:255', 'last_name' => 'required|max:255']);
 
-        //update the student
+        // update the student
         Student::where('id', $request->id)->update([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
         ]);
 
-        //return to create new student page with message of updated 
+        // return to create new student page with message of updated
         return redirect()->route('student.new')->with('savedMessage', 'New student has been updated.');
     }
 
     public function destroy(Request $request)
     {
-        //delete the student
+        // delete the student
         Student::find($request->id)->delete();
+
         return back();
     }
 }

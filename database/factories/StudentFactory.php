@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Student>
+ * @extends Factory<Student>
  */
 class StudentFactory extends Factory
 {
@@ -18,7 +19,7 @@ class StudentFactory extends Factory
     {
         return [
             'first_name' => fake()->name(),
-            'last_name' => fake()->lastName()
+            'last_name' => fake()->lastName(),
         ];
     }
 }
